@@ -1,0 +1,19 @@
+<h1>Grades Index</h1>
+
+<a href="/grades/add/">Add New Grade</a>
+
+<table border="1">
+    <tr>
+        <th>Course</th>
+        <th>Grade</th>
+        <th>Semester</th>
+    </tr>
+
+    {% for g in grades %}
+    <tr>
+        <td>{{ g.courses_offered }}</td>
+        <td>{{ g.grades }}</td>
+        <td>{{ g.semester }}</td>
+    </tr>
+    {% endfor %}
+</table>
