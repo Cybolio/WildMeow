@@ -1,7 +1,15 @@
 <html>
 <head><title>WildMeow Dashboard</title></head>
 <body>
+<nav>
+    <a href="{% url 'edit_profile' %}">Edit Profile</a> |
+    <a href="{% url 'add_record' %}">Add New Record</a> |
+    <a href="{% url 'logout' %}">Log Off</a>
+</nav>
+
 <h1>Dashboard</h1>
+<p>Welcome, {{ user.username }}!</p>
+
 <h2>Rooms</h2>
 <ul>
 {% for room in rooms %}
