@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WildMeow – Add New Program</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #161b24;
+      --surface2: #1e2535;
+      --accent: #f4a144;
+      --green: #4ecb8d;
+      --text: #e8eaf0;
+      --muted: #6b7590;
+      --border: rgba(255,255,255,0.07);
+      --radius: 14px;
+      --error: #e05c5c;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(13,15,20,0.88);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; }
+    .logo span { color: var(--accent); }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--muted); text-decoration: none; font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+
+    .page-wrap {
+      max-width: 680px;
+      margin: 60px auto;
+      padding: 0 24px 80px;
+    }
+
+    .form-header {
+      margin-bottom: 36px;
+    }
+    .eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .form-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .form-header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      appearance: none;
+    }
+    .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(244,161,68,0.15);
+    }
+    textarea.form-control { resize: vertical; min-height: 80px; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    .errorlist {
+      list-style: none;
+      margin-top: 6px;
+    }
+    .errorlist li {
+      font-size: 0.8rem;
+      color: var(--error);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .btn {
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #0d0f14; }
+    .btn-primary:hover { background: #f5b05e; transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { color: var(--text); background: var(--surface2); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">WILD<span>MEOW</span></div>
+  <a href="/" class="back-link">← Back to Index</a>
+</nav>
+
+<div class="page-wrap">
+  <div class="form-header">
+    <div class="eyebrow">Program Management</div>
+    <h1>Add New Program</h1>
+    <p>Fill in the details below to register a new academic program into the system.</p>
+  </div>
+
+  <div class="form-card">
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="{{ form.Program_Name.id_for_label }}">{{ form.Program_Name.label }}</label>
+        {{ form.Program_Name }}
+        {% if form.Program_Name.errors %}<ul class="errorlist">{% for e in form.Program_Name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="{{ form.Program_Code.id_for_label }}">{{ form.Program_Code.label }}</label>
+          {{ form.Program_Code }}
+          {% if form.Program_Code.errors %}<ul class="errorlist">{% for e in form.Program_Code.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.Department_ID.id_for_label }}">{{ form.Department_ID.label }}</label>
+          {{ form.Department_ID }}
+          {% if form.Department_ID.errors %}<ul class="errorlist">{% for e in form.Department_ID.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="{{ form.Total_Units.id_for_label }}">{{ form.Total_Units.label }}</label>
+          {{ form.Total_Units }}
+          {% if form.Total_Units.errors %}<ul class="errorlist">{% for e in form.Total_Units.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.Program_Duration.id_for_label }}">{{ form.Program_Duration.label }}</label>
+          {{ form.Program_Duration }}
+          {% if form.Program_Duration.errors %}<ul class="errorlist">{% for e in form.Program_Duration.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      </div>
+
+      <hr class="form-divider"/>
+
+      <div class="form-group">
+        <label for="{{ form.Associated_Courses.id_for_label }}">{{ form.Associated_Courses.label }}</label>
+        {{ form.Associated_Courses }}
+        {% if form.Associated_Courses.errors %}<ul class="errorlist">{% for e in form.Associated_Courses.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Program</button>
+        <a href="/" class="btn btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
