@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache # Import never_cache
 from .models import Room, Department
 from django.contrib import messages
 
@@ -23,17 +24,20 @@ def logout_view(request):
     return redirect('login')
 
 @login_required(login_url='login')
+@never_cache # Apply never_cache
 def index(request):
     rooms = Room.objects.all()
     departments = Department.objects.all()
     return render(request, 'index.html', {'rooms': rooms, 'departments': departments})
 
 @login_required(login_url='login')
+@never_cache # Apply never_cache
 def edit_profile(request):
     # Placeholder for edit profile
     return render(request, 'edit_profile.html')
 
 @login_required(login_url='login')
+@never_cache # Apply never_cache
 def add_record(request):
     # Placeholder for add new record
     return render(request, 'add_record.html')
