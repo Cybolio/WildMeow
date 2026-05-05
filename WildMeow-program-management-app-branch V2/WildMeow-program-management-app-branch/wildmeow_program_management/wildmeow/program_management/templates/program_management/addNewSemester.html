@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WildMeow – Add New Semester</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f14; --surface: #161b24; --surface2: #1e2535;
+      --accent: #f4a144; --green: #4ecb8d; --text: #e8eaf0;
+      --muted: #6b7590; --border: rgba(255,255,255,0.07);
+      --error: #e05c5c; --radius: 14px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 48px; border-bottom: 1px solid var(--border);
+      background: rgba(13,15,20,0.92); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; }
+    .logo span { color: var(--accent); }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--muted); text-decoration: none; font-size: 0.875rem; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+    .page-wrap { max-width: 680px; margin: 56px auto; padding: 0 24px 80px; }
+    .form-header { margin-bottom: 32px; }
+    .eyebrow { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--green); font-weight: 600; margin-bottom: 10px; }
+    .form-header h1 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; }
+    .form-header p { color: var(--muted); font-size: 0.875rem; margin-top: 6px; line-height: 1.6; }
+    .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 0.78rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .form-control {
+      width: 100%; padding: 12px 16px; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s; appearance: none;
+    }
+    .form-control:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(78,203,141,0.15); }
+    .form-control::placeholder { color: var(--muted); }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+    select.form-control {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7590' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .section-label {
+      font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+      margin: 24px 0 16px; display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .errorlist { list-style: none; margin-top: 5px; }
+    .errorlist li { font-size: 0.78rem; color: var(--error); }
+    .form-actions { display: flex; gap: 12px; margin-top: 28px; }
+    .btn {
+      padding: 12px 26px; border-radius: 8px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; font-weight: 500; cursor: pointer; border: none;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--green); color: #0d0f14; }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); background: var(--surface2); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">WILD<span>MEOW</span></div>
+  <a href="/program_management/" class="back-link">← Back to Home</a>
+</nav>
+
+<div class="page-wrap">
+  <div class="form-header">
+    <div class="eyebrow">Program Management</div>
+    <h1>Add New Semester</h1>
+    <p>Define a new academic semester with its enrollment window and schedule dates.</p>
+  </div>
+
+  <div class="form-card">
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="{{ form.Academic_Year.id_for_label }}">{{ form.Academic_Year.label }}</label>
+          {{ form.Academic_Year }}
+          {% if form.Academic_Year.errors %}<ul class="errorlist">{% for e in form.Academic_Year.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.Term.id_for_label }}">{{ form.Term.label }}</label>
+          {{ form.Term }}
+          {% if form.Term.errors %}<ul class="errorlist">{% for e in form.Term.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      </div>
+
+      <div class="section-label">Semester Dates</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="{{ form.Start_Date.id_for_label }}">{{ form.Start_Date.label }}</label>
+          {{ form.Start_Date }}
+          {% if form.Start_Date.errors %}<ul class="errorlist">{% for e in form.Start_Date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.End_Date.id_for_label }}">{{ form.End_Date.label }}</label>
+          {{ form.End_Date }}
+          {% if form.End_Date.errors %}<ul class="errorlist">{% for e in form.End_Date.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      </div>
+
+      <div class="section-label">Enrollment Window</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="{{ form.Enrollment_Start.id_for_label }}">{{ form.Enrollment_Start.label }}</label>
+          {{ form.Enrollment_Start }}
+          {% if form.Enrollment_Start.errors %}<ul class="errorlist">{% for e in form.Enrollment_Start.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.Enrollment_End.id_for_label }}">{{ form.Enrollment_End.label }}</label>
+          {{ form.Enrollment_End }}
+          {% if form.Enrollment_End.errors %}<ul class="errorlist">{% for e in form.Enrollment_End.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">💾 Save Semester</button>
+        <a href="/program_management/" class="btn btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

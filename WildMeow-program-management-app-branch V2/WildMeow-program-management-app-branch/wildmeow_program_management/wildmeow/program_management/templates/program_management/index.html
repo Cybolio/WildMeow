@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WildMeow – Program Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #161b24;
+      --surface2: #1e2535;
+      --accent: #f4a144;
+      --accent2: #e05c5c;
+      --green: #4ecb8d;
+      --text: #e8eaf0;
+      --muted: #6b7590;
+      --border: rgba(255,255,255,0.07);
+      --radius: 14px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 48px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,15,20,0.92);
+    }
+    .logo { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+    .logo span { color: var(--accent); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-user {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-right: 12px;
+    }
+    .nav-user strong { color: var(--text); }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .nav-btn-edit {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .nav-btn-edit:hover { background: #252d40; }
+
+    .nav-btn-add {
+      background: var(--accent);
+      color: #0d0f14;
+    }
+    .nav-btn-add:hover { background: #f5b05e; }
+
+    .nav-btn-logout {
+      background: rgba(224,92,92,0.12);
+      color: var(--accent2);
+      border: 1px solid rgba(224,92,92,0.2);
+    }
+    .nav-btn-logout:hover { background: rgba(224,92,92,0.22); }
+
+    /* ── ADD DROPDOWN ── */
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      min-width: 220px;
+      z-index: 200;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: block;
+      padding: 14px 18px;
+      font-size: 0.875rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .dropdown-item:hover { background: var(--surface2); color: var(--accent); }
+    .dropdown-label {
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 12px 18px 6px;
+    }
+
+    /* ── MESSAGES ── */
+    .messages-area { padding: 16px 48px 0; }
+    .msg {
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+    .msg-success { background: rgba(78,203,141,0.12); color: var(--green); border: 1px solid rgba(78,203,141,0.25); }
+    .msg-error { background: rgba(224,92,92,0.12); color: var(--accent2); border: 1px solid rgba(224,92,92,0.25); }
+    .msg-warning { background: rgba(244,161,68,0.12); color: var(--accent); border: 1px solid rgba(244,161,68,0.25); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 48px 48px 36px;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -80px; right: -80px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(244,161,68,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; line-height: 1.1; margin-bottom: 8px;
+    }
+    .hero p { color: var(--muted); font-size: 0.9rem; max-width: 480px; line-height: 1.6; }
+
+    /* ── MAIN ── */
+    .main { padding: 36px 48px 80px; display: grid; gap: 40px; }
+
+    .section-head {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 16px;
+    }
+    .section-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+    .badge {
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 1px; padding: 4px 10px; border-radius: 999px;
+    }
+
+    /* ── TABLE ── */
+    .table-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    thead { background: var(--surface2); }
+    th {
+      text-align: left; padding: 13px 20px;
+      font-family: 'Syne', sans-serif; font-size: 0.68rem;
+      font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    td { padding: 13px 20px; border-top: 1px solid var(--border); color: var(--text); }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .pill {
+      display: inline-block; padding: 3px 10px;
+      border-radius: 999px; font-size: 0.75rem; font-weight: 500;
+    }
+    .pill-blue { background: rgba(78,203,141,0.15); color: var(--green); }
+    .pill-yellow { background: rgba(244,161,68,0.15); color: var(--accent); }
+    .pill-red { background: rgba(224,92,92,0.15); color: var(--accent2); }
+
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
+    .empty-state .icon { font-size: 2rem; margin-bottom: 10px; }
+    .empty-state p { font-size: 0.875rem; line-height: 1.6; }
+
+    footer {
+      text-align: center; padding: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 0.75rem;
+    }
+    footer strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">WILD<span>MEOW</span></div>
+
+  <div class="nav-right">
+    <span class="nav-user">Hello, <strong>{{ user.first_name|default:user.username }}</strong></span>
+
+    <!-- Edit Profile -->
+    <a href="/program_management/edit-profile/" class="nav-btn nav-btn-edit">
+      ✏️ Edit Profile
+    </a>
+
+    <!-- Add New Record Dropdown -->
+    <div class="dropdown" id="addDropdown">
+      <button class="nav-btn nav-btn-add" id="addDropdownBtn" onclick="toggleDropdown(event)">+ Add New Record ▾</button>
+      <div class="dropdown-menu" id="addDropdownMenu">
+        <div class="dropdown-label">Choose Record Type</div>
+        <a href="/program_management/addNewProgram/" class="dropdown-item">📋 Add New Program</a>
+        <a href="/program_management/addNewSemester/" class="dropdown-item">🗓️ Add New Semester</a>
+      </div>
+    </div>
+
+    <!-- Log Off -->
+    <a href="/program_management/logout/" class="nav-btn nav-btn-logout">
+      🚪 Log Off
+    </a>
+  </div>
+</nav>
+
+<!-- MESSAGES -->
+{% if messages %}
+<div class="messages-area">
+  {% for message in messages %}
+    <div class="msg {% if message.tags == 'error' %}msg-error{% elif message.tags == 'warning' %}msg-warning{% else %}msg-success{% endif %}">
+      {{ message }}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Program Management App</div>
+  <h1>Programs &amp; Semesters</h1>
+  <p>Manage academic programs and semester schedules for the WildMeow enrollment system.</p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- PROGRAMS TABLE -->
+  <div>
+    <div class="section-head">
+      <div class="section-title">Programs</div>
+      <span class="badge">{{ programs|length }} record{{ programs|length|pluralize }}</span>
+    </div>
+    <div class="table-card">
+      {% if programs %}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Program Name</th>
+            <th>Code</th>
+            <th>Dept. ID</th>
+            <th>Units</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for program in programs %}
+          <tr>
+            <td><span class="pill pill-blue">#{{ program.Program_ID }}</span></td>
+            <td>{{ program.Program_Name }}</td>
+            <td><strong>{{ program.Program_Code }}</strong></td>
+            <td>{{ program.Department_ID }}</td>
+            <td>{{ program.Total_Units }} units</td>
+            <td>{{ program.Program_Duration }} yr{{ program.Program_Duration|pluralize }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">📋</div>
+        <p>No programs added yet.<br>Click <strong>Add New Record</strong> to get started.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- SEMESTERS TABLE -->
+  <div>
+    <div class="section-head">
+      <div class="section-title">Semesters</div>
+      <span class="badge">{{ semesters|length }} record{{ semesters|length|pluralize }}</span>
+    </div>
+    <div class="table-card">
+      {% if semesters %}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Academic Year</th>
+            <th>Term</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Enrollment Window</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sem in semesters %}
+          <tr>
+            <td><span class="pill pill-yellow">#{{ sem.Semester_ID }}</span></td>
+            <td>{{ sem.Academic_Year }}</td>
+            <td>
+              {% if sem.Term == "Summer" %}
+                <span class="pill pill-red">{{ sem.Term }}</span>
+              {% else %}
+                <span class="pill pill-blue">{{ sem.Term }}</span>
+              {% endif %}
+            </td>
+            <td>{{ sem.Start_Date }}</td>
+            <td>{{ sem.End_Date }}</td>
+            <td>{{ sem.Enrollment_Start }} → {{ sem.Enrollment_End }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state">
+        <div class="icon">🗓️</div>
+        <p>No semesters added yet.<br>Click <strong>Add New Record</strong> to get started.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>WildMeow</strong> · Program Management App · Kim Joshua C. Paltinga
+</footer>
+
+<script>
+  function toggleDropdown(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('addDropdownMenu');
+    menu.classList.toggle('open');
+  }
+
+  // Close dropdown when clicking anywhere outside
+  document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('addDropdown');
+    const menu = document.getElementById('addDropdownMenu');
+    if (!dropdown.contains(event.target)) {
+      menu.classList.remove('open');
+    }
+  });
+</script>
+
+</body>
+</html>

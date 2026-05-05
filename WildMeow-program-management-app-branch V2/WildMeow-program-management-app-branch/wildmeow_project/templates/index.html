@@ -1,0 +1,19 @@
+<html>
+<head><title>WildMeow Dashboard</title></head>
+<body>
+<h1>Dashboard</h1>
+<h2>Rooms</h2>
+<ul>
+{% for room in rooms %}
+<li>{{ room.Room_Code }} - {{ room.Building_Name }}</li>
+{% endfor %}
+</ul>
+
+<h2>Departments</h2>
+<ul>
+{% for dept in departments %}
+<li>{{ dept.Dept_Name }}</li>
+{% endfor %}
+</ul>
+</body>
+</html>
